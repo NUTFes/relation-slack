@@ -1,8 +1,8 @@
 package usecase
 
 import (
-	"github.com/NUTFes/relation-slack/repository"
-	"github.com/NUTFes/relation-slack/usecase/util"
+	"github.com/NUTFes/nutmeg-slack/repository"
+	"github.com/NUTFes/nutmeg-slack/usecase/util"
 	"go.mongodb.org/mongo-driver/bson"
 )
 

@@ -3,7 +3,7 @@ package controller
 import (
 	"net/http"
 
-	"github.com/NUTFes/relation-slack/usecase"
+	"github.com/NUTFes/nutmeg-slack/usecase"
 	"github.com/labstack/echo/v4"
 )
 

@@ -5,7 +5,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/NUTFes/relation-slack/db"
+	"github.com/NUTFes/nutmeg-slack/db"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 )

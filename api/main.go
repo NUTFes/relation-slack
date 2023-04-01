@@ -3,10 +3,10 @@ package main
 import (
 	"log"
 
-	"github.com/NUTFes/relation-slack/controller"
-	"github.com/NUTFes/relation-slack/db"
-	"github.com/NUTFes/relation-slack/repository"
-	"github.com/NUTFes/relation-slack/usecase"
+	"github.com/NUTFes/nutmeg-slack/controller"
+	"github.com/NUTFes/nutmeg-slack/db"
+	"github.com/NUTFes/nutmeg-slack/repository"
+	"github.com/NUTFes/nutmeg-slack/usecase"
 	"github.com/joho/godotenv"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -14,8 +14,8 @@ import (
 
 func main() {
 	e := echo.New()
-	client := db.ConnectMongo()
 	loadEnv()
+	client := db.ConnectMongo()
 	repository := repository.NewMongoDBRepository(client)
 	usecase := usecase.NewMongoDBUsecase(repository)
 	controller := controller.NewMongoDBController(usecase)
@@ -30,7 +30,7 @@ func main() {
 	// CORS
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
 		// TODO: 本番環境のURLも許可する
-		AllowOrigins: []string{"http://localhost:3001", "https://slackbot.nutfes.relation.net"},
+		AllowOrigins: []string{"http://localhost:3001", "https://slackbot.nutfes.net"},
 		AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept},
 	}))
 	e.Use(middleware.Logger())
