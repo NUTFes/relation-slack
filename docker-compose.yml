@@ -1,0 +1,64 @@
+version: "3"
+services:
+  nutmeg-slackbot:
+    container_name: nsb
+    build: ./slackbot
+    env_file:
+      - env/dev.env
+    volumes:
+      - ./slackbot:/work
+    ports:
+      - 3000:3000
+    tty: true
+    command: 'python main.py'
+    depends_on:
+      - mongo
+      - mongo-express
+
+  mongo:
+    image: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: password
+    ports:
+      - 27017:27017
+    volumes:
+      - ./mongo:/data/db
+      - ./mongo:/data/configdb
+
+  mongo-express:
+    image: mongo-express
+    restart: always
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_SERVER: mongo
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: password
+      ME_CONFIG_MONGODB_PORT: 27017
+    depends_on:
+      - mongo
+
+  api:
+    container_name: 'api'
+    build:
+      context: ./api
+    volumes:
+      - ./api:/go/src/work
+    ports:
+      - '1323:1323'
+    command: './start.sh'
+    depends_on:
+      - mongo
+
+  view:
+    build: ./view
+    container_name: "view"
+    volumes:
+      - ./view:/app
+    command: sh -c "npm install && npm run dev"
+    ports:
+      - "3001:3001"
+    stdin_open: true
+    tty: true
