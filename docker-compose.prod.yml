@@ -50,6 +50,8 @@ services:
     tty: true
     depends_on:
       - api
+    environment:
+      NEXT_PUBLIC_APP_ENV: production
 
   nginx:
     image: nginx
