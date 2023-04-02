@@ -9,7 +9,7 @@
     "lint": "next lint --dir src",
     "lint:fix": "yarn lint --fix",
     "format": "prettier --write --ignore-path .gitignore './**/*.{js,jsx,ts,tsx,json}'",
-    "prepare": "cd .. && husky install"
+    "prepare": "cd .. && husky install view/.husky"
   },
   "dependencies": {
     "@next/font": "13.1.6",
