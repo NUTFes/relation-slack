@@ -1,10 +1,10 @@
 import axios, { AxiosResponse } from 'axios'
 import { NextPage } from 'next'
 import { useRef, useEffect, useState } from 'react'
+import { AiOutlineCaretDown } from 'react-icons/ai'
 import { GrFormClose } from 'react-icons/gr'
 import { useRecoilValue } from 'recoil'
 
-import { MainLayout } from '@/components/layout/MainLayout'
 import { channelState } from '@/store/channel'
 import { Message } from '@/type/message.types'
 
@@ -23,12 +23,49 @@ export const getServerSideProps = async () => {
   }
 }
 
+const SearchBox = ({
+  startDate,
+  onSetStartDate,
+  endDate,
+  onSetEndDate,
+  onClearDate,
+}: {
+  startDate: string
+  onSetStartDate: (value: string) => void
+  endDate: string
+  onSetEndDate: (value: string) => void
+  onClearDate: () => void
+}) => (
+  <div className='flex flex-row items-center justify-between gap-2'>
+    <p className='text-sm'>期間</p>
+    <div className='flex flex-row flex-wrap items-center gap-3'>
+      <input
+        type='date'
+        value={startDate}
+        onChange={(e) => onSetStartDate(e.target.value)}
+        className='rounded-lg border border-gray-300 p-1 text-sm'
+      />
+      <p>~</p>
+      <input
+        type='date'
+        value={endDate}
+        onChange={(e) => onSetEndDate(e.target.value)}
+        className='rounded-lg border border-gray-300 p-1 text-sm'
+      />
+      <div className='rounded-md border border-gray-400'>
+        <GrFormClose className='cursor-pointer' onClick={onClearDate} />
+      </div>
+    </div>
+  </div>
+)
+
 export const Page: NextPage<Props> = ({ messages }: Props) => {
   const channel = useRecoilValue(channelState)
   const [channelName, setChannelName] = useState<string>('')
   const [filteredMessages, setFilteredMessages] = useState<{ date: string; messages: Message[] }[]>([])
   const [startDate, setStartDate] = useState<string>('')
   const [endDate, setEndDate] = useState<string>('')
+  const [isSearchBoxOpen, setIsSearchBoxOpen] = useState<boolean>(false)
   const scrollRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -78,68 +115,60 @@ export const Page: NextPage<Props> = ({ messages }: Props) => {
   }, [filteredMessages])
 
   return (
-    <main>
-      <MainLayout>
-        <div className='h-screen w-full'>
-          <div className='flex items-center justify-between border-b-2 border-gray-300 px-4 py-2 text-xl'>
-            <div className='flex items-center gap-2'>
-              <p>#</p>
-              <p>{channelName}</p>
-            </div>
-            <div className='flex items-center gap-2'>
-              <p className='text-sm'>期間</p>
-              <input
-                type='date'
-                value={startDate}
-                onChange={(e) => setStartDate(e.target.value)}
-                className='rounded-lg border border-gray-300 p-1 text-sm'
-              />
-              <p>~</p>
-              <input
-                type='date'
-                value={endDate}
-                onChange={(e) => setEndDate(e.target.value)}
-                className='rounded-lg border border-gray-300 p-1 text-sm'
-              />
-              <div className='border border-gray-400 rounded-md'>
-                <GrFormClose
-                  className='cursor-pointer'
-                  onClick={() => {
-                    setStartDate('')
-                    setEndDate('')
-                  }}
-                />
-              </div>
-            </div>
+    <main className='flex h-full flex-col'>
+      <div className='flex flex-col items-start justify-around gap-3 border-b-2 border-gray-300 px-4 py-2 text-xl md:flex-row md:items-center md:justify-between'>
+        <div className='flex items-center gap-3'>
+          <div className='flex items-center gap-2'>
+            <p>#</p>
+            <p>{channelName}</p>
           </div>
-          <div className='mt-5 h-3/4 w-full border-b border-gray-300'>
-            {filteredMessages.length === 0 && (
-              <div className='rounded-md px-3 hover:bg-gray-200'>
-                <p>メッセージはありません</p>
-              </div>
-            )}
-            <div ref={scrollRef} className='h-full w-full overflow-y-scroll'>
-              {filteredMessages.map((messages, index) => (
-                <div key={index}>
-                  <p className='mx-auto w-fit translate-y-1/2 rounded-full border border-gray-300 bg-white px-3 py-1 text-sm font-bold'>
-                    {messages.date}
-                  </p>
-                  <hr className='mb-10' />
-                  {messages.messages.map((message, index) => (
-                    <div key={index} className='rounded-md px-3 py-1 hover:bg-gray-200'>
-                      <div key={index} className='flex items-center gap-2'>
-                        <p className='text-sm font-bold'>{message.user}</p>
-                        <p className='text-xs'>{message.eventTs}</p>
-                      </div>
-                      <p>{message.text}</p>
-                    </div>
-                  ))}
+          <button
+            type='button'
+            className='rounded-md border border-gray-400 p-1 text-sm md:hidden'
+            onClick={() => setIsSearchBoxOpen(!isSearchBoxOpen)}
+          >
+            <AiOutlineCaretDown />
+          </button>
+        </div>
+        <div className={`flex flex-col items-center gap-2 md:flex-row md:block ${isSearchBoxOpen ? 'block' : 'hidden'}`}>
+          <SearchBox
+            startDate={startDate}
+            onSetStartDate={setStartDate}
+            endDate={endDate}
+            onSetEndDate={setEndDate}
+            onClearDate={() => {
+              setStartDate('')
+              setEndDate('')
+            }}
+          />
+        </div>
+      </div>
+      <div className='h-4/5 border-b border-gray-300'>
+        {filteredMessages.length === 0 && (
+          <div className='rounded-md px-3 hover:bg-gray-200'>
+            <p>メッセージはありません</p>
+          </div>
+        )}
+        <div ref={scrollRef} className='h-full overflow-y-scroll'>
+          {filteredMessages.map((messages, index) => (
+            <div key={index}>
+              <p className='mx-auto w-fit translate-y-1/2 rounded-full border border-gray-300 bg-white px-3 py-1 text-sm font-bold'>
+                {messages.date}
+              </p>
+              <hr className='mb-10' />
+              {messages.messages.map((message, index) => (
+                <div key={index} className='rounded-md px-3 py-1 hover:bg-gray-200'>
+                  <div key={index} className='flex items-center gap-2'>
+                    <p className='text-sm font-bold'>{message.user}</p>
+                    <p className='text-xs'>{message.eventTs}</p>
+                  </div>
+                  <p>{message.text}</p>
                 </div>
               ))}
             </div>
-          </div>
+          ))}
         </div>
-      </MainLayout>
+      </div>
     </main>
   )
 }

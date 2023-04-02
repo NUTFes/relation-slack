@@ -52,6 +52,8 @@ services:
       - api
     environment:
       NEXT_PUBLIC_APP_ENV: production
+    env_file:
+      - env/prd.env
 
   nginx:
     image: nginx

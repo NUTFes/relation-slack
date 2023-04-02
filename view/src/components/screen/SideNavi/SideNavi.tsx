@@ -23,7 +23,7 @@ export const SideNavi: React.FC = () => {
   }, [])
 
   return (
-    <div className='sticky flex h-full w-fit justify-start bg-side text-lg font-thin text-white'>
+    <div className='absolute z-50 flex h-full w-fit justify-start bg-side text-lg font-thin md:sticky text-white'>
       <div className='my-10 flex w-full flex-col gap-1 px-3'>
         {channels.map((channel, index) => (
           <button

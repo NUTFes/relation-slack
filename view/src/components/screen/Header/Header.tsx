@@ -1,11 +1,14 @@
 import axios, { AxiosResponse } from 'axios'
 import { useEffect, useRef, useState, useMemo } from 'react'
+import { AiOutlineMenu } from 'react-icons/ai'
 import { useRecoilState } from 'recoil'
 
 import { channelState } from '@/store/channel'
 import { Message } from '@/type/message.types'
 
-export const Header: React.FC = () => {
+import { HeaderProps } from './Header.types'
+
+export const Header: React.FC<HeaderProps> = ({ onToggleSideNavi }: HeaderProps) => {
   const [isFocus, setIsFocus] = useState(false)
   const [value, setValue] = useState('')
   const [messages, setMessages] = useState<Message[]>([])
@@ -44,8 +47,13 @@ export const Header: React.FC = () => {
 
   return (
     <>
-      <div className='flex h-16 flex-row items-center justify-between bg-header px-10 text-xl font-bold text-white'>
-        <h1>渉外局Slackログ</h1>
+      <div className='flex h-20 flex-col items-start justify-around md:justify-between bg-header px-3 text-xl font-bold text-white md:h-16 md:flex-row md:items-center md:px-10'>
+        <div className='flex items-center gap-5'>
+          <button type='button' onClick={onToggleSideNavi}>
+            <AiOutlineMenu />
+          </button>
+          <h1>渉外局Slackログ</h1>
+        </div>
         <input
           ref={inputRef}
           value={value}
@@ -60,7 +68,7 @@ export const Header: React.FC = () => {
         } fixed left-0 top-0 z-30 h-full w-full bg-black bg-opacity-50 transition-all`}
       >
         <div className='flex h-full w-full items-center justify-center'>
-          <div className='h-1/2 w-1/2 rounded-lg bg-white p-5'>
+          <div className='h-2/3 md:h-1/2 w-9/10 md:w-1/2 rounded-lg bg-white p-5'>
             <div className='flex items-center gap-3'>
               <p className='font-bold'>検索内容:</p>
               <p className='text-xl'>{value || '入力中...'}</p>
@@ -69,7 +77,7 @@ export const Header: React.FC = () => {
               <p className='font-bold'>一致件数:</p>
               <p className='text-xl'>{searchMessages.length || 'なし'}</p>
             </div>
-            <div className='h-full w-full overflow-y-scroll '>
+            <div className='h-4/5 md:h-full w-full overflow-y-scroll '>
               {searchMessages.map((message, index) => (
                 <button
                   type='button'
