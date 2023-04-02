@@ -15,6 +15,9 @@ func ConnectMongo() *mongo.Client {
 		Username: os.Getenv("DB_USER"),
 		Password: os.Getenv("DB_PASSWORD"),
 	}
+	fmt.Println("~~~~~~~~~~~~")
+	fmt.Println(os.Getenv("DB_NAME"))
+	fmt.Println("~~~~~~~~~~~~")
 	clientOptions := options.Client().ApplyURI("mongodb://mongo").SetAuth(credential)
 	client, err := mongo.Connect(context.Background(), clientOptions)
 	if err != nil {
