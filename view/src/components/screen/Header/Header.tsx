@@ -1,12 +1,15 @@
 import axios, { AxiosResponse } from 'axios'
 import { useEffect, useRef, useState, useMemo } from 'react'
+import { useRecoilState } from 'recoil'
 
+import { channelState } from '@/store/channel'
 import { Message } from '@/type/message.types'
 
 export const Header: React.FC = () => {
   const [isFocus, setIsFocus] = useState(false)
   const [value, setValue] = useState('')
   const [messages, setMessages] = useState<Message[]>([])
+  const [, setChannel] = useRecoilState(channelState)
   const inputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
@@ -66,11 +69,15 @@ export const Header: React.FC = () => {
               <p className='font-bold'>一致件数:</p>
               <p className='text-xl'>{searchMessages.length || 'なし'}</p>
             </div>
-            <div className='h-4/5 w-full mt-3 overflow-y-scroll '>
+            <div className='h-full w-full overflow-y-scroll '>
               {searchMessages.map((message, index) => (
                 <button
                   type='button'
                   key={index}
+                  onClick={() => {
+                    setChannel({ id: message.channelId, name: message.channelName })
+                    setValue('')
+                  }}
                   className='flex w-full flex-col items-start rounded-md px-3 py-1 hover:bg-gray-200'
                 >
                   <p className='font-bold'>{`# ${message.channelName}`}</p>
