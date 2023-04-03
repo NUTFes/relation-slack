@@ -64,3 +64,6 @@ services:
     tty: true
     env_file:
       - env/dev.env
+    environment:
+      NEXT_PUBLIC_SSR_API_URI: "http://api:1323"
+      NEXT_PUBLIC_CSR_API_URI: "http://localhost:1323"

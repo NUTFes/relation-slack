@@ -50,10 +50,11 @@ services:
     tty: true
     depends_on:
       - api
-    environment:
-      NEXT_PUBLIC_APP_ENV: production
     env_file:
       - env/prd.env
+    environment:
+      NEXT_PUBLIC_SSR_API_URI: "https://relation-slack-api.nutfes.net"
+      NEXT_PUBLIC_CSR_API_URI: "https://relation-slack-api.nutfes.net"
 
   # tunnelName: relation-slack-prd
   cloudflare:

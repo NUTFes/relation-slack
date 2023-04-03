@@ -1,10 +1,10 @@
-import axios, { AxiosResponse } from 'axios'
 import { useEffect, useRef, useState, useMemo } from 'react'
 import { AiOutlineMenu } from 'react-icons/ai'
 import { useRecoilState } from 'recoil'
 
 import { channelState } from '@/store/channel'
 import { Message } from '@/type/message.types'
+import { get } from '@/utils/api_methods'
 
 import { HeaderProps } from './Header.types'
 
@@ -16,9 +16,11 @@ export const Header: React.FC<HeaderProps> = ({ onToggleSideNavi }: HeaderProps)
   const inputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
-    if (!process.env.CSR_API_URI) throw new Error('CSR_API_URI is not defined.')
-    const messagesUrl = `${process.env.CSR_API_URI}/data`
-    axios.get(messagesUrl).then((res: AxiosResponse<Message[]>) => setMessages(res.data))
+    if (!process.env.NEXT_PUBLIC_CSR_API_URI) throw new Error('CSR_API_URI is not defined.')
+    const messagesUrl = `${process.env.NEXT_PUBLIC_CSR_API_URI}/data`
+    get(messagesUrl).then((res) => {
+      setMessages(res as Message[])
+    })
   }, [])
 
   const searchMessages = useMemo(() => {
@@ -47,7 +49,7 @@ export const Header: React.FC<HeaderProps> = ({ onToggleSideNavi }: HeaderProps)
 
   return (
     <>
-      <div className='flex h-20 flex-col items-start justify-around md:justify-between bg-header px-3 text-xl font-bold text-white md:h-16 md:flex-row md:items-center md:px-10'>
+      <div className='flex h-20 flex-col items-start justify-around bg-header px-3 text-xl font-bold text-white md:h-16 md:flex-row md:items-center md:justify-between md:px-10'>
         <div className='flex items-center gap-5'>
           <button type='button' onClick={onToggleSideNavi}>
             <AiOutlineMenu />
@@ -68,7 +70,7 @@ export const Header: React.FC<HeaderProps> = ({ onToggleSideNavi }: HeaderProps)
         } fixed left-0 top-0 z-30 h-full w-full bg-black bg-opacity-50 transition-all`}
       >
         <div className='flex h-full w-full items-center justify-center'>
-          <div className='h-2/3 md:h-1/2 w-9/10 md:w-1/2 rounded-lg bg-white p-5'>
+          <div className='h-2/3 w-9/10 rounded-lg bg-white p-5 md:h-1/2 md:w-1/2'>
             <div className='flex items-center gap-3'>
               <p className='font-bold'>検索内容:</p>
               <p className='text-xl'>{value || '入力中...'}</p>
@@ -77,7 +79,7 @@ export const Header: React.FC<HeaderProps> = ({ onToggleSideNavi }: HeaderProps)
               <p className='font-bold'>一致件数:</p>
               <p className='text-xl'>{searchMessages.length || 'なし'}</p>
             </div>
-            <div className='h-4/5 md:h-full w-full overflow-y-scroll '>
+            <div className='h-4/5 w-full overflow-y-scroll md:h-full '>
               {searchMessages.map((message, index) => (
                 <button
                   type='button'

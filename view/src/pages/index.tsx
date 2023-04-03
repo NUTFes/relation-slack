@@ -1,4 +1,3 @@
-import axios, { AxiosResponse } from 'axios'
 import { NextPage } from 'next'
 import { useRef, useEffect, useState } from 'react'
 import { AiOutlineCaretDown } from 'react-icons/ai'
@@ -7,18 +6,19 @@ import { useRecoilValue } from 'recoil'
 
 import { channelState } from '@/store/channel'
 import { Message } from '@/type/message.types'
+import { get } from '@/utils/api_methods'
 
 interface Props {
   messages: Message[]
 }
 
 export const getServerSideProps = async () => {
-  if (!process.env.SSR_API_URI) throw new Error('SSR_API_URI is not defined.')
-  const messagesUrl = `${process.env.SSR_API_URI}/data`
-  const messages = await axios.get(messagesUrl).then((res: AxiosResponse<Message[]>) => res)
+  if (!process.env.NEXT_PUBLIC_SSR_API_URI) throw new Error('SSR_API_URI is not defined.')
+  const messagesUrl = `${process.env.NEXT_PUBLIC_SSR_API_URI}/data`
+  const messages = await get(messagesUrl)
   return {
     props: {
-      messages: messages.data,
+      messages,
     },
   }
 }
@@ -130,7 +130,9 @@ export const Page: NextPage<Props> = ({ messages }: Props) => {
             <AiOutlineCaretDown />
           </button>
         </div>
-        <div className={`flex flex-col items-center gap-2 md:flex-row md:block ${isSearchBoxOpen ? 'block' : 'hidden'}`}>
+        <div
+          className={`flex flex-col items-center gap-2 md:block md:flex-row ${isSearchBoxOpen ? 'block' : 'hidden'}`}
+        >
           <SearchBox
             startDate={startDate}
             onSetStartDate={setStartDate}
