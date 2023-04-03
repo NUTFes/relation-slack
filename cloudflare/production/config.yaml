@@ -3,6 +3,8 @@ credentials-file: /home/nonroot/.cloudflared/e8248664-8698-41e6-a513-671ae86a0c9
 protocol: http2
 
 ingress:
-  - hostname: relation.slack.nutfes.net
+  - hostname: relation-slack.nutfes.net
     service: http://view:3001
+  - hostname: relation-slack-api.nutfes.net
+    service: http://api:1323
   - service: http_status:404
