@@ -1,0 +1,8 @@
+tunnel: e8248664-8698-41e6-a513-671ae86a0c96
+credentials-file: /home/nonroot/.cloudflared/e8248664-8698-41e6-a513-671ae86a0c96.json
+protocol: http2
+
+ingress:
+  - hostname: relation.slack.nutfes.net
+    service: http://view:3001
+  - service: http_status:404
