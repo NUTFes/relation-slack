@@ -30,7 +30,7 @@ func main() {
 	// CORS
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
 		// TODO: 本番環境のURLも許可する
-		AllowOrigins: []string{"http://localhost:3001", "https://relation-slack.nutfes.net/"},
+		AllowOrigins: []string{"http://localhost:3001", "https://relation-slack.nutfes.net"},
 		AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept},
 	}))
 	e.Use(middleware.Logger())
