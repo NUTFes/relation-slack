@@ -10,15 +10,20 @@ import { get } from '@/utils/api_methods'
 
 interface Props {
   messages: Message[]
+  users: { [key: string]: string }
 }
 
 export const getServerSideProps = async () => {
   if (!process.env.NEXT_PUBLIC_SSR_API_URI) throw new Error('SSR_API_URI is not defined.')
   const messagesUrl = `${process.env.NEXT_PUBLIC_SSR_API_URI}/data`
   const messages = await get(messagesUrl)
+  const usersUrl = `${process.env.NEXT_PUBLIC_SSR_API_URI}/users/info`
+  const users = (await get(usersUrl)) as Array<object>
+  const userData = users[0]
   return {
     props: {
       messages,
+      users: userData,
     },
   }
 }
@@ -59,7 +64,7 @@ const SearchBox = ({
   </div>
 )
 
-export const Page: NextPage<Props> = ({ messages }: Props) => {
+export const Page: NextPage<Props> = ({ messages, users }: Props) => {
   const channel = useRecoilValue(channelState)
   const [channelName, setChannelName] = useState<string>('')
   const [filteredMessages, setFilteredMessages] = useState<FilteredMessage[]>([])
@@ -67,6 +72,19 @@ export const Page: NextPage<Props> = ({ messages }: Props) => {
   const [endDate, setEndDate] = useState<string>('')
   const [isSearchBoxOpen, setIsSearchBoxOpen] = useState<boolean>(false)
   const scrollRef = useRef<HTMLDivElement>(null)
+
+  const replaceUserName = (text: string) => {
+    const regex = /<@.+?>/g
+    const matches = text.match(regex)
+    if (!matches) return text
+    const replaced = matches.map((match) => {
+      const userId = match.replace(/<|@|>/g, '')
+      const user: string = users[userId]
+      if (!user) return match
+      return `@${user} `
+    })
+    return replaced.reduce((acc, replace, index) => acc.replace(matches[index], replace), text)
+  }
 
   useEffect(() => {
     const filtered = messages.filter((message) => message.channelId === channel.id)
@@ -173,7 +191,7 @@ export const Page: NextPage<Props> = ({ messages }: Props) => {
                     <p className='text-sm font-bold'>{message.user}</p>
                     <p className='text-xs'>{message.eventTs}</p>
                   </div>
-                  <p>{message.text}</p>
+                  <p>{replaceUserName(message.text)}</p>
                 </div>
               ))}
             </div>
