@@ -10,7 +10,8 @@ export const SideNavi: React.FC = () => {
   const [, setChannel] = useRecoilState(channelState)
 
   useEffect(() => {
-    const channelUrl = `${process.env.NEXT_PUBLIC_CSR_API_URI || ''}/channel/info`
+    if (process.env.NEXT_PUBLIC_CSR_API_URI === undefined) return
+    const channelUrl = `${process.env.NEXT_PUBLIC_CSR_API_URI}/channel/info`
     const fetchChannel = async () => {
       const res = await get(channelUrl)
       const dataObject = res as Array<object>
