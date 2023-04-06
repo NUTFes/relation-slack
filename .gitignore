@@ -2,6 +2,10 @@
 mongo/
 slackbot/clients/__pycache__/
 api/tmp
-frontend/slackbot-project/node_modules
 vite/node_modules
 .vscode
+cloudflare/develop/cert.pem
+cloudflare/develop/ffda9354-e5a9-4a4f-a950-64627eaac770.json
+cloudflare/production/cert.pem
+cloudflare/production/e8248664-8698-41e6-a513-671ae86a0c96.json
+
