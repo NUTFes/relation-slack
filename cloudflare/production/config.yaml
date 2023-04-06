@@ -7,4 +7,6 @@ ingress:
     service: http://view:3001
   - hostname: relation-slack-api.nutfes.net
     service: http://api:1323
+  - hostname: relation-slack-bot.nutfes.net
+    service: http://nutmeg-slackbot:3000
   - service: http_status:404
