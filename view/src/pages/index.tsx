@@ -5,7 +5,7 @@ import { GrFormClose } from 'react-icons/gr'
 import { useRecoilValue } from 'recoil'
 
 import { channelState } from '@/store/channel'
-import { Message } from '@/type/message.types'
+import { Message, FilteredMessage } from '@/type/message.types'
 import { get } from '@/utils/api_methods'
 
 interface Props {
@@ -62,7 +62,7 @@ const SearchBox = ({
 export const Page: NextPage<Props> = ({ messages }: Props) => {
   const channel = useRecoilValue(channelState)
   const [channelName, setChannelName] = useState<string>('')
-  const [filteredMessages, setFilteredMessages] = useState<{ date: string; messages: Message[] }[]>([])
+  const [filteredMessages, setFilteredMessages] = useState<FilteredMessage[]>([])
   const [startDate, setStartDate] = useState<string>('')
   const [endDate, setEndDate] = useState<string>('')
   const [isSearchBoxOpen, setIsSearchBoxOpen] = useState<boolean>(false)
@@ -70,7 +70,16 @@ export const Page: NextPage<Props> = ({ messages }: Props) => {
 
   useEffect(() => {
     const filtered = messages.filter((message) => message.channelId === channel.id)
-    const grouped = filtered.reduce((acc, message) => {
+    const filteredByTime = Array.from(new Set(filtered.map((message) => message.eventTs)))
+      .map((eventTs) => filtered.find((message) => message.eventTs === eventTs))
+      .sort((a, b) => {
+        if (a && b) {
+          return Number(a.eventTs) - Number(b.eventTs)
+        }
+        return 0
+      })
+    const grouped = filteredByTime.reduce((acc, message) => {
+      if (!message) return acc
       const date = new Date(Number(message.eventTs) * 1000).toLocaleDateString()
       if (!acc[date]) acc[date] = []
       const messageTime = new Date(Number(message.eventTs) * 1000).toLocaleTimeString()

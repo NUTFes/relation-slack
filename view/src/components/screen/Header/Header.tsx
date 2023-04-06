@@ -19,7 +19,11 @@ export const Header: React.FC<HeaderProps> = ({ onToggleSideNavi }: HeaderProps)
     if (!process.env.NEXT_PUBLIC_CSR_API_URI) throw new Error('CSR_API_URI is not defined.')
     const messagesUrl = `${process.env.NEXT_PUBLIC_CSR_API_URI}/data`
     get(messagesUrl).then((res) => {
-      setMessages(res as Message[])
+      const messages = res as Message[]
+      const uniqueMessages = Array.from(new Set(messages.map((message) => message.eventTs))).map((eventTs) =>
+        messages.find((message) => message.eventTs === eventTs),
+      )
+      setMessages(uniqueMessages as Message[])
     })
   }, [])
 
