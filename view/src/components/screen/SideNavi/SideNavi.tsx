@@ -5,7 +5,9 @@ import { channelState } from '@/store/channel'
 import { Channel } from '@/type/channel.types'
 import { get } from '@/utils/api_methods'
 
-export const SideNavi: React.FC = () => {
+import { SideNaviProps } from './SideNavi.types'
+
+export const SideNavi: React.FC<SideNaviProps> = ({ onClose }: SideNaviProps) => {
   const [channels, setChannels] = useState<Channel[]>([])
   const [, setChannel] = useRecoilState(channelState)
 
@@ -36,7 +38,10 @@ export const SideNavi: React.FC = () => {
             type='button'
             key={index}
             className='flex w-full items-center gap-3 rounded-lg px-2 py-1 text-sm hover:bg-sideHover'
-            onClick={() => setChannel(channel)}
+            onClick={() => {
+              setChannel(channel)
+              if (onClose) onClose()
+            }}
           >
             <p>#</p>
             <p>{channel.name}</p>

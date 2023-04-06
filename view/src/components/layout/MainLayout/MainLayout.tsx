@@ -23,7 +23,12 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }: MainLayoutPr
       <Header onToggleSideNavi={() => setIsSideNaviOpen(!isSideNaviOpen)} />
       <div className='relative flex h-screen flex-row'>
         <div className={`${isSideNaviOpen ? 'block' : 'hidden'} h-screen`}>
-          <SideNavi />
+          <div className='hidden h-full md:block'>
+            <SideNavi />
+          </div>
+          <div className='h-full md:hidden'>
+            <SideNavi onClose={() => setIsSideNaviOpen(false)} />
+          </div>
         </div>
         <div className='flex-1'>{children}</div>
       </div>
