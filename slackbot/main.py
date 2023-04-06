@@ -50,7 +50,7 @@ def register_user_name():
   url = "https://slack.com/api/users.list"
   response = requests.get(url, headers={"Authorization": "Bearer " + os.environ.get("SLACK_BOT_TOKEN")})
   users = response.json()["members"]
-  replace_user_dict = {user["id"]:user["profile"]["display_name"] for user in users}
+  replace_user_dict = {user["id"]:user["profile"]["display_name"] if user["profile"]["display_name"] != "" else user["real_name"] for user in users}
 
   mongo = MongoDB(db_host, db_port, db_user , db_password, db_name,"user")
   registered_user_dict = mongo.find()
