@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"net/http"
 
 	"github.com/NUTFes/nutmeg-slack/controller"
 	"github.com/NUTFes/nutmeg-slack/db"
@@ -30,8 +31,9 @@ func main() {
 	// CORS
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
 		// TODO: 本番環境のURLも許可する
-		AllowOrigins: []string{"http://localhost:3001", "https://relation-slack.nutfes.net"},
+		AllowOrigins: []string{"*"},
 		AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept},
+		AllowMethods: []string{http.MethodGet, http.MethodPost, http.MethodPut, http.MethodDelete},
 	}))
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())

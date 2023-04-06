@@ -1,0 +1,12 @@
+tunnel: ffda9354-e5a9-4a4f-a950-64627eaac770
+credentials-file: /home/nonroot/.cloudflared/ffda9354-e5a9-4a4f-a950-64627eaac770.json
+protocol: http2
+
+ingress:
+  - hostname: relation-slack-dev.nutfes.net
+    service: http://view:3001
+  - hostname: relation-slack-dev-api.nutfes.net
+    service: http://api:1323
+  - hostname: relation-slack-dev-bot.nutfes.net
+    service: http://nutmeg-slackbot:3000
+  - service: http_status:404

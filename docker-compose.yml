@@ -65,5 +65,12 @@ services:
     env_file:
       - env/dev.env
     environment:
-      NEXT_PUBLIC_SSR_API_URI: "http://api:1323"
-      NEXT_PUBLIC_CSR_API_URI: "http://localhost:1323"
+      NEXT_PUBLIC_SSR_API_URI: "https://relation-slack-dev-api.nutfes.net"
+      NEXT_PUBLIC_CSR_API_URI: "https://relation-slack-dev-api.nutfes.net"
+  
+  # tunnelName: relation-slack-dev
+  cloudflare:
+    image: "cloudflare/cloudflared:latest"
+    container_name: "cloudflare"
+    volumes: ["./cloudflare/develop:/home/nonroot/.cloudflared"]
+    command: tunnel run
