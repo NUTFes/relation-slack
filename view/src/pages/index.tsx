@@ -178,7 +178,7 @@ export const Page: NextPage<Props> = ({ messages, users }: Props) => {
             <p>メッセージはありません</p>
           </div>
         )}
-        <div ref={scrollRef} className='h-full overflow-y-scroll'>
+        <div ref={scrollRef} className='h-full w-full overflow-y-scroll'>
           {filteredMessages.map((messages, index) => (
             <div key={index}>
               <p className='mx-auto w-fit translate-y-1/2 rounded-full border border-gray-300 bg-white px-3 py-1 text-sm font-bold'>
@@ -186,12 +186,12 @@ export const Page: NextPage<Props> = ({ messages, users }: Props) => {
               </p>
               <hr className='mb-10' />
               {messages.messages.map((message, index) => (
-                <div key={index} className='rounded-md px-3 py-1 hover:bg-gray-200'>
-                  <div key={index} className='flex items-center gap-2'>
+                <div key={index} className='max-w-[100vw] rounded-md px-3 py-1 hover:bg-gray-200'>
+                  <div className='flex items-center gap-2'>
                     <p className='text-sm font-bold'>{message.user}</p>
                     <p className='text-xs'>{message.eventTs}</p>
                   </div>
-                  <p>{replaceUserName(message.text)}</p>
+                  <p className='w-full break-words'>{replaceUserName(message.text)}</p>
                 </div>
               ))}
             </div>
