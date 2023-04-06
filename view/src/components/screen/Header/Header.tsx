@@ -79,7 +79,7 @@ export const Header: React.FC<HeaderProps> = ({ onToggleSideNavi }: HeaderProps)
               <p className='font-bold'>一致件数:</p>
               <p className='text-xl'>{searchMessages.length || 'なし'}</p>
             </div>
-            <div className='h-4/5 w-full overflow-y-scroll md:h-full '>
+            <div className='h-4/5 w-full overflow-y-scroll'>
               {searchMessages.map((message, index) => (
                 <button
                   type='button'
