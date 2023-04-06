@@ -13,12 +13,17 @@ export const SideNavi: React.FC = () => {
     if (process.env.NEXT_PUBLIC_CSR_API_URI === undefined) return
     const channelUrl = `${process.env.NEXT_PUBLIC_CSR_API_URI}/channel/info`
     const fetchChannel = async () => {
-      const res = await get(channelUrl)
-      const dataObject = res as Array<object>
-      const data = dataObject[0] as { [key: string]: string }
-      const dataArr: Channel[] = Object.keys(data).map((key) => ({ id: key, name: data[key] }))
-      dataArr.pop()
-      setChannels(dataArr)
+      await get(channelUrl)
+        .then((res) => {
+          const dataObject = res as Array<object>
+          const data = dataObject[0] as { [key: string]: string }
+          const dataArr: Channel[] = Object.keys(data).map((key) => ({ id: key, name: data[key] }))
+          dataArr.pop()
+          setChannels(dataArr)
+        })
+        .catch((err) => {
+          console.error(err)
+        })
     }
     fetchChannel()
   }, [])

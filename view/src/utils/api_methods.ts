@@ -5,6 +5,10 @@ export const get = async (url: string) => {
     headers: {
       'Content-Type': 'application/json',
     },
-  }).then((res) => res.json())
+  })
+    .then((res) => res.json())
+    .catch((err) => {
+      console.error(err)
+    })
   return res
 }
